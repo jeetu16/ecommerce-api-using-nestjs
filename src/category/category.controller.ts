@@ -1,10 +1,15 @@
-import { Controller, Post, Delete, Body, Param, ParseIntPipe, Get } from "@nestjs/common";
+import { Controller, Post, Delete, Body, Param, ParseIntPipe, Get, UseGuards } from "@nestjs/common";
 import { CategoryService } from "./category.service";
 import { AddCategoryDto } from "./dto/Add.Category.dto";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "src/guards/AuthGuard";
+import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
 
 
 @ApiTags('category')
+@ApiBearerAuth('token')
+@UseGuards(AuthGuard)
+@UseGuards(RoleBasedGuard)
 @Controller("/category")
 export class CategoryController {
 

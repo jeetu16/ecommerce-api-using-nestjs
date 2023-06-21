@@ -5,7 +5,7 @@ export class User {
     @PrimaryGeneratedColumn( {
         type:'bigint'
     })
-    id : number;
+    user_id : number;
 
     @Column({
         nullable:false,
@@ -28,18 +28,17 @@ export class User {
     })
     role: string
 
-    @Column({
-        nullable:false,
-        type:'bigint',
-        default:false
-    })
-    phone: number
 
     @Column({
         nullable: false,
         default: ""
     })
     password: string
+
+    @Column({
+        nullable:false
+    })
+    phone: number
 
 }
 

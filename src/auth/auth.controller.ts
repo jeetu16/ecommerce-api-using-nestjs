@@ -3,6 +3,7 @@ import { AuthService } from "./auth.service";
 import { CreateUserDto } from "./dto/Create.User.dto";
 import { LoginUserDto } from "./dto/Login.User.dto";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Request } from "express";
 
 
 @ApiTags('auth')
@@ -90,7 +91,7 @@ export class AuthController {
         description: "Unauthorized Access"
     })
     @Post("/login")
-    loginUser(@Body() loginUserDto: LoginUserDto) {
-        return this.authService.loginUser(loginUserDto)
+    loginUser(@Body() loginUserDto: LoginUserDto, req: Request) {
+        return this.authService.loginUser(loginUserDto, req)
     }
 } 

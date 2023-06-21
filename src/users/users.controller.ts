@@ -1,18 +1,23 @@
-import { Controller, Get, Param, ParseIntPipe, Body,  Delete, Patch } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Body,  Delete, Patch, UseGuards } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UpdateUserDto } from "./dto/Update.User.dto";
-import { ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
+import { AuthGuard } from "src/guards/AuthGuard";
+import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
 
 
 
 @ApiTags('users')
 @ApiSecurity('')
+@UseGuards(AuthGuard)
+@ApiBearerAuth('token')
 @Controller('users')
 export class UsersController {
+    
     constructor(private usersService: UsersService) { }
-
-
+    
     @Get()
+    @UseGuards(RoleBasedGuard)
     @ApiOperation({summary:"This api is used for getting all users details. It can only be accessed by admin"})
     @ApiResponse({
         status:201,

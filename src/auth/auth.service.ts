@@ -8,6 +8,7 @@ import { plainToClass } from "class-transformer";
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from "./dto/Login.User.dto";
 import { sign } from 'jsonwebtoken'
+import { Request } from "express";
 
 
 @Injectable()
@@ -23,14 +24,11 @@ export class AuthService {
                 throw new HttpException("User already exists", HttpStatus.CONFLICT)
             }
             const hash = await bcrypt.hash(userDto.password, 10);
-            console.log("Before creating user");
 
             const newUser = this.userRepository.create({ ...userDto, password: hash});
-            console.log("After creating user");
 
             await this.userRepository.save(newUser);
 
-            console.log("After saving user");
             return {
                 message: "User Successfully Created",
                 user: plainToClass(SerializedUser, newUser)
@@ -38,7 +36,7 @@ export class AuthService {
         
     }
 
-    async loginUser(loginUserDto: LoginUserDto) {
+    async loginUser(loginUserDto: LoginUserDto, req: Request) {
         const { email, password } = loginUserDto;
         const user = await this.userRepository.findOne({ where: { email } });
         if (!user) {
@@ -46,7 +44,7 @@ export class AuthService {
         } 
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
-            const payload = { email: user.email }
+            const payload = { email: user.email, user_id: user.user_id, role: user.role }
             const token = sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRY })
             return {
                 message: "Successfully Logged In",

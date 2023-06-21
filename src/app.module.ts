@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
 import { Category } from './typeorm/Category';
+import { Product } from './typeorm/Product';
+import { ProductModule } from './product/product.module';
 
 
 @Module({
@@ -15,6 +17,7 @@ import { Category } from './typeorm/Category';
     UsersModule,
     AuthModule,
     CategoryModule,
+    ProductModule,
     TypeOrmModule.forRoot({
       type: "mysql",
       host: process.env.DB_HOST_NAME,
@@ -23,7 +26,7 @@ import { Category } from './typeorm/Category';
       password: process.env.DB_PASSWORD,
       database: 'testdb',
       autoLoadEntities:true,
-      entities: [User, Category],
+      entities: [User, Category, Product],
       synchronize: true,
       migrationsRun: false
     })

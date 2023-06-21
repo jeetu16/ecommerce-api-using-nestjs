@@ -33,7 +33,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     password: string
 
-    @IsString()
+    @ApiProperty({
+        description:"mobile number of user",
+        example: 1234567890
+    })
     @IsNotEmpty()
     phone: number
 }
