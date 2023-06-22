@@ -2,12 +2,21 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "src/typeorm/Product";
 import { Repository } from "typeorm";
 import { AddProductDto } from "./dto/Add.Product.dto";
+import { HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
 
 
 export class ProductService {
     constructor(@InjectRepository(Product) private productRepository: Repository<Product>) {}
 
-    async addCategory( addProductDto: AddProductDto ) {
+    // adding product into db
+    async addProduct( addProductDto: AddProductDto ) : Promise<{}> {
+
+        const existsProduct = await this.productRepository.findOne({ where: { product_name: addProductDto.product_name } })
+
+        if(existsProduct) {
+            throw new HttpException("Product already exists", HttpStatus.CONFLICT)
+        }
+
         const newProduct = await this.productRepository.create(addProductDto);
 
         await this.productRepository.save(newProduct)
@@ -17,4 +26,55 @@ export class ProductService {
             newProduct
         }
     }
+
+
+    // get all products from db
+    async getAllProducts() : Promise<Product[]>{
+        const products = await this.productRepository.find();
+
+        return products
+    }
+
+    // delete specific product by id
+    async deleteProduct( product_id: number ) {
+        if(!product_id) {
+            throw new HttpException("Please provide product id", HttpStatus.BAD_REQUEST)
+        }
+
+        const product = await this.productRepository.findOne({where: { product_id }})
+
+        if(!product) {
+            throw new HttpException("Not found any product", HttpStatus.NOT_FOUND);
+        }
+
+        await this.productRepository.delete(product_id);
+
+        return {
+            message: "Successfully deleted product",
+            product
+        } 
+    }
+
+    // get a specific product by id
+    async getProduct( product_id: number ) {
+        if(!product_id) {
+            throw new HttpException("No token received", HttpStatus.BAD_REQUEST);
+        }
+
+        const product = await this.productRepository.findOne({ where: { product_id } });
+
+        if(!product) {
+            throw new HttpException("Not found any product with given product id", HttpStatus.NOT_FOUND);
+        }
+
+        return product;
+    }
+
+    // updating product details
+
+    async updateProduct( product_id: number ) {
+        
+    }
+
+
 }

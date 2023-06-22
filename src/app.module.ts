@@ -1,4 +1,4 @@
-import { Module, ValidationPipe } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, ValidationPipe } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +9,7 @@ import { CategoryModule } from './category/category.module';
 import { Category } from './typeorm/Category';
 import { Product } from './typeorm/Product';
 import { ProductModule } from './product/product.module';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 
 @Module({
@@ -39,4 +40,8 @@ import { ProductModule } from './product/product.module';
     }
   ],
 })
-export class AppModule { }
+export class AppModule  implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+      consumer.apply(LoggerMiddleware).forRoutes('*');
+    }
+}

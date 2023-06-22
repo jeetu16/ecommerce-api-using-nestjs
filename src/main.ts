@@ -13,12 +13,11 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth(
       { 
-        // I was also testing it without prefix 'Bearer ' before the JWT
         description: `[just text field] Please enter token in following format: Bearer <JWT>`,
         name: 'Authorization',
-        bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+        bearerFormat: 'Bearer',
         scheme: 'Bearer',
-        type: 'http', // I`ve attempted type: 'apiKey' too
+        type: 'http',
         in: 'Header'
       },
       'token', // This name here is important for matching up with @ApiBearerAuth() in your controller!
@@ -31,7 +30,7 @@ async function bootstrap() {
     await app.listen(4000);
     app.useGlobalPipes(new ValidationPipe());
   } catch (error) {
-    console.log(error)
+    throw error
   }
 }
 bootstrap();

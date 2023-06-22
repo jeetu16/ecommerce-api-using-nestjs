@@ -12,6 +12,7 @@ export class AuthController {
 
     constructor(private authService: AuthService) { }
 
+    @Post("/register")
     @ApiOperation({summary:"This api is used for register new customer"})
     @ApiBody({
         schema: {
@@ -53,13 +54,12 @@ export class AuthController {
         status: 500,
         description: "Internal Server Error"
     })
-
-    @Post("/register")
     registerUser(@Body() createUserDto: CreateUserDto) {
         return this.authService.registerUser(createUserDto);
     }
 
 
+    @Post("/login")
     @ApiOperation({summary:"This api is used for logged in the user"})
     @ApiBody({
         schema: {
@@ -90,7 +90,6 @@ export class AuthController {
         status: 401,
         description: "Unauthorized Access"
     })
-    @Post("/login")
     loginUser(@Body() loginUserDto: LoginUserDto, req: Request) {
         return this.authService.loginUser(loginUserDto, req)
     }

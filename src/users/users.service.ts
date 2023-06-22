@@ -30,7 +30,7 @@ export class UsersService {
     // delete user
     async deleteUser(user_id: number) {
         if (!user_id) {
-            throw new HttpException("Please Provide id", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Please provide id", HttpStatus.BAD_REQUEST)
         }
         const user = await this.userRepository.findOne({ where: { user_id } });
         if (!user) {
@@ -47,7 +47,7 @@ export class UsersService {
     // update user
     async updateUser(user_id: number, updateUserDto: UpdateUserDto) {
         if (!user_id) {
-            throw new HttpException("Please Provide id", HttpStatus.BAD_REQUEST)
+            throw new HttpException("Please provide user id", HttpStatus.BAD_REQUEST)
         }
         const user = await this.userRepository.findOne({ where: { user_id } });
         console.log(user)

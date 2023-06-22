@@ -25,7 +25,7 @@ export class CategoryController {
         return this.categoryService.getAllCategory();
     }
 
-    @Delete("/delete/:id")
+    @Delete("/:id")
     deleteCategory(@Param('id', ParseIntPipe) id: number) {
         return this.categoryService.deleteCategory(id);
     }

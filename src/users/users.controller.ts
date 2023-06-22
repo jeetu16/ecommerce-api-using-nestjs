@@ -4,6 +4,7 @@ import { UpdateUserDto } from "./dto/Update.User.dto";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/AuthGuard";
 import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
+import { Product } from "src/typeorm/Product";
 
 
 
@@ -45,14 +46,15 @@ export class UsersController {
     
 
     @Get("/search/:id")
+    @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for getting a particular user details" })
-    @ApiParam({
-        name:'id',
-        type:'integer',
-        required:true,
-        description: "Enter user Id" 
+    // @ApiParam({
+    //     name:'id',
+    //     type:'integer',
+    //     required:true,
+    //     description: "Enter user Id" 
 
-    })
+    // })
     @ApiResponse({
         status: 201,
         description: "Successfully getting a user details"
@@ -76,6 +78,7 @@ export class UsersController {
 
 
     @Delete('/:id')
+    @UseGuards(RoleBasedGuard)
     @ApiOperation({summary:"This api is used to delete a particular user based on id. Only admin can delete a user"})
     @ApiResponse({
         status: 400,
@@ -89,7 +92,31 @@ export class UsersController {
         return this.usersService.deleteUser(id);
     }
 
+
     @Patch("/:id")
+    @ApiOperation({summary:"This api is used for update user information"})
+    @ApiParam({
+        name:'id',
+        type:'integer',
+        required:true,
+        description: "Enter user Id"
+    })
+    @ApiResponse({
+        status:201,
+        description:"successfully updated user",
+    })
+    @ApiResponse({
+        status:400,
+        description: "Please provide user id"
+    })
+    @ApiResponse({
+        status:404,
+        description: "Not found any user"
+    })
+    @ApiResponse({
+        status:500,
+        description: "Internal Server Error"
+    })
     updateUser(
         @Body() updateUserDto: UpdateUserDto,
         @Param('id', ParseIntPipe) id: number
