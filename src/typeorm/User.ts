@@ -1,10 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Cart } from './Cart';
 
 @Entity({ name: "user" })
 export class User {
-    @PrimaryGeneratedColumn( {
-        type:'bigint'
-    })
+    @PrimaryGeneratedColumn('uuid')
     user_id : number;
 
     @Column({
@@ -15,6 +14,12 @@ export class User {
 
     @Column()
     lastName: string
+
+    @Column()
+    DOB:string
+
+    @Column()
+    gender: string
 
     @Column({
         nullable: false,
@@ -34,11 +39,18 @@ export class User {
         default: ""
     })
     password: string
-
+    
     @Column({
-        nullable:false
+        length: 10, 
+        unique:true
     })
-    phone: number
+    mobile: string;
+
+    @Column()
+    address: string;
+
+    @OneToOne( type => Cart, cart=>cart.id)
+    cart: Cart ;
 
 }
 

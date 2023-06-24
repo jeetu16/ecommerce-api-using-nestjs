@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { WinstonModule } from 'nest-winston';
+import { format, transports } from 'winston';
 
 async function bootstrap() {
   try {

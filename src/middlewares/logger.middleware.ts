@@ -13,7 +13,7 @@ export class LoggerMiddleware implements NestMiddleware {
         const userAgent = req.get('user-agent') || '';
 
         res.on('finish', () => {
-            const { statusCode } = res;
+            const { statusCode, } = res;
 
 
             this.logger.log(`\n\nMethod: '${method}',\nHostname: '${hostname}',\nTarget Route: '${originalUrl}',\nStatus Code: '${statusCode}',\nUser Agent: '${userAgent}',\nIp Address: '${ip}'`);
@@ -21,6 +21,8 @@ export class LoggerMiddleware implements NestMiddleware {
             if(method!=='GET') {
                 this.logger.log(req.body);
             }
+
+            console.log(res);
         });
 
         next();

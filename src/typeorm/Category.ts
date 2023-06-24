@@ -5,9 +5,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 @Entity({name: 'category'})
 export class Category {
 
-    @PrimaryGeneratedColumn({
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn('uuid')
     id: number;
 
     @Column({

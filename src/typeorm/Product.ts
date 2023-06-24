@@ -4,9 +4,7 @@ import { Category } from "./Category";
 
 @Entity({ name: 'product' })
 export class Product {
-    @PrimaryGeneratedColumn({
-        type: 'bigint'
-    })
+    @PrimaryGeneratedColumn('uuid')
     product_id: number
 
     @Column()
