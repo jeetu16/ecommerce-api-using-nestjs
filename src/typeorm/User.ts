@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { Order } from './Order';
 import { Product } from './Product';
 import { Category } from './Category';
+import { Cart } from './Cart';
 
 @Entity({ name: "user" })
 export class User {
@@ -25,14 +26,16 @@ export class User {
     email: string
 
     @Column({
-        default: "CUSTOMER"
+        default: "CUSTOMER",
+        select:false
     })
     role: string
 
 
     @Column({
         nullable: false,
-        default: ""
+        default: "",
+        select:false
     })
     password: string
     
@@ -50,10 +53,9 @@ export class User {
     orders: Order[];
 
     
-    @Column({
-        type:'simple-array'
-    })
-    cart : number[]
+    @OneToMany(() => Cart, (cart) => cart.user)
+    @JoinColumn()
+    cart : Cart[]
 
     @Column({
         length: 6

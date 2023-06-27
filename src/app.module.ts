@@ -12,6 +12,7 @@ import { ProductModule } from './product/product.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { Order } from './typeorm/Order';
 import { OrderModule } from './order/order.module';
+import { Cart } from './typeorm/Cart';
 
 
 @Module({
@@ -30,7 +31,7 @@ import { OrderModule } from './order/order.module';
       password: process.env.DB_PASSWORD,
       database: 'testdb',
       autoLoadEntities:true,
-      entities: [User, Category, Product, Order],
+      entities: [User, Category, Product, Order, Cart],
       synchronize: true,
     })
   ],

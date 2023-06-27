@@ -6,13 +6,15 @@ import { Repository } from "typeorm";
 import { Request } from "express";
 import { plainToClass } from "class-transformer";
 import { SerializedProduct } from "./model/SerializedProduct";
+import { Cart } from "src/typeorm/Cart";
 
 
 @Injectable()
 export class OrderService {
     constructor(
         @InjectRepository(Product) private productRepository: Repository<Product>,
-        @InjectRepository(User) private userRepository: Repository<User>
+        @InjectRepository(User) private userRepository: Repository<User>,
+        @InjectRepository(Cart) private cartRepository: Repository<Cart>
     ) {}
 
     async addToCart(product_id: number, req : Request) {
@@ -28,9 +30,13 @@ export class OrderService {
         
         const user = await this.userRepository.findOne({ where:{user_id: id}})
         
-        user.cart.push(product_id);
+        // user.cart.push(product_id);
 
-        await this.userRepository.save(user);
+        const cart = this.cartRepository.create({user })
+
+        console.log(cart);
+
+        // await this.userRepository.save(user);
 
         return {
             message:"Successfully added into cart",

@@ -26,6 +26,8 @@ export class Product {
     })
     sold:number
 
+    @ManyToOne(type => Category, )
+
     @Column()
     category_id: number; 
 }
