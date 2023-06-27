@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Product } from "./Product";
 
 
 
 @Entity({name: 'category'})
 export class Category {
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: number;
 
     @Column({
@@ -13,4 +14,7 @@ export class Category {
         default: ""
     })
     category_name: string 
+
+    @OneToMany(type=>Product, product=>product)
+    products: Product[];
 }

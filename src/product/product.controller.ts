@@ -8,9 +8,9 @@ import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
 
 
 
+@UseGuards(AuthGuard)
 @ApiTags('product')
 @ApiBearerAuth('token')
-@UseGuards(AuthGuard)
 @Controller('product')
 export class ProductController {
     constructor(private productService: ProductService) {}
@@ -23,20 +23,19 @@ export class ProductController {
     }
 
     @Get()
-    @UseGuards(RoleBasedGuard)
     @ApiOperation({summary: "This api is used for getting all products information. This api can only be accessed by Admin"})
     getAllProducts() {
         return this.productService.getAllProducts()
     }
 
     @Get('/:product_id')
-    @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for getting a specific product details. This api can only be accessed by Admin" })
     getProduct(@Param('product_id', ParseIntPipe) product_id: number) {
         return this.productService.getProduct(product_id)
     }
 
     @Delete('/:product_id')
+    @UseGuards(AuthGuard)
     @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for deleting a specific product by id. This api can only be accessed by Admin" })
     deleteProduct(@Param('product_id', ParseIntPipe) product_id: number) {
@@ -44,6 +43,7 @@ export class ProductController {
     }
 
     @Patch('/:product_id')
+    @UseGuards(AuthGuard)
     @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for updating the information about product. This api can only be accessed by Admin" }) 
     updateProduct(@Param('product_id', ParseIntPipe) product_id: number) {

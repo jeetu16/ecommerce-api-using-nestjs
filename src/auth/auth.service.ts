@@ -17,6 +17,7 @@ export class AuthService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
     async registerUser(userDto: CreateUserDto) {
+        try{
   
             const email = userDto.email;
             const user = await this.userRepository.findOne({ where: { email } });
@@ -33,6 +34,9 @@ export class AuthService {
                 message: "User Successfully Created",
                 user: plainToClass(SerializedUser, newUser)
             }
+        } catch(error) {
+            throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+        }
         
     }
 

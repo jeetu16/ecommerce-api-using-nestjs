@@ -3,13 +3,25 @@ import { Product } from "src/typeorm/Product";
 import { Repository } from "typeorm";
 import { AddProductDto } from "./dto/Add.Product.dto";
 import { HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
+import { Category } from "src/typeorm/Category";
 
 
 export class ProductService {
-    constructor(@InjectRepository(Product) private productRepository: Repository<Product>) {}
+    constructor(
+        @InjectRepository(Product) private productRepository: Repository<Product>,
+        @InjectRepository(Category) private categoryRepository: Repository<Category>
+    ) {}
 
     // adding product into db
     async addProduct( addProductDto: AddProductDto ) : Promise<{}> {
+
+        const {category_id} = addProductDto
+
+        const findCategory = await this.categoryRepository.findOne({where:{id:category_id}})
+
+        if(!findCategory) {
+            throw new NotFoundException("Not found any category");
+        }
 
         const existsProduct = await this.productRepository.findOne({ where: { product_name: addProductDto.product_name } })
 
@@ -17,7 +29,7 @@ export class ProductService {
             throw new HttpException("Product already exists", HttpStatus.CONFLICT)
         }
 
-        const newProduct = await this.productRepository.create(addProductDto);
+        const newProduct = this.productRepository.create(addProductDto);
 
         await this.productRepository.save(newProduct)
 

@@ -19,9 +19,9 @@ export class CategoryService {
                 throw new HttpException("Category already exist", HttpStatus.CONFLICT);
             }
 
-            const newCategory = await this.categoryRepository.create({...addCategoryDto})
+            const newCategory = this.categoryRepository.create({...addCategoryDto})
             
-            this.categoryRepository.save(newCategory);
+            await this.categoryRepository.save(newCategory);
 
             return {
                 message: "Category Successfully Created",

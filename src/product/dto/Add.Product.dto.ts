@@ -42,5 +42,6 @@ export class AddProductDto {
     @IsNotEmpty()
     category_id:number
     
+    
 
 }

@@ -35,8 +35,23 @@ export class CreateUserDto {
 
     @ApiProperty({
         description:"mobile number of user",
-        example: 1234567890
+        example: "1234567890"
     })
     @IsNotEmpty()
-    phone: number
+    mobile: string
+
+
+    @ApiProperty({
+        description:"address of user",
+        example: "Green Chowk, Durg, C.G."
+    })
+    @IsNotEmpty()
+    address: string
+
+    @ApiProperty({
+        description:"pincode user location",
+        example: "Green Chowk, Durg, C.G."
+    })
+    @IsNotEmpty()
+    pincode: string
 }

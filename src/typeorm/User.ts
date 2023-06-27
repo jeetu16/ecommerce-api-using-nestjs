@@ -1,9 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
-import { Cart } from './Cart';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, ManyToOne } from 'typeorm';
+import { Order } from './Order';
+import { Product } from './Product';
+import { Category } from './Category';
 
 @Entity({ name: "user" })
 export class User {
-    @PrimaryGeneratedColumn('uuid')
+
+    @PrimaryGeneratedColumn()
     user_id : number;
 
     @Column({
@@ -15,12 +18,6 @@ export class User {
     @Column()
     lastName: string
 
-    @Column()
-    DOB:string
-
-    @Column()
-    gender: string
-
     @Column({
         nullable: false,
         default: ""
@@ -28,7 +25,6 @@ export class User {
     email: string
 
     @Column({
-        nullable:false,
         default: "CUSTOMER"
     })
     role: string
@@ -49,8 +45,19 @@ export class User {
     @Column()
     address: string;
 
-    @OneToOne( type => Cart, cart=>cart.id)
-    cart: Cart ;
+    
+    @OneToMany(() => Order, order => order.user) 
+    orders: Order[];
 
+    
+    @Column({
+        type:'simple-array'
+    })
+    cart : number[]
+
+    @Column({
+        length: 6
+    })
+    pincode: string
 }
 

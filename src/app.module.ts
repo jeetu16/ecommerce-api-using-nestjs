@@ -10,7 +10,8 @@ import { Category } from './typeorm/Category';
 import { Product } from './typeorm/Product';
 import { ProductModule } from './product/product.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { Cart } from './typeorm/Cart';
+import { Order } from './typeorm/Order';
+import { OrderModule } from './order/order.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { Cart } from './typeorm/Cart';
     AuthModule,
     CategoryModule,
     ProductModule,
+    OrderModule,
     TypeOrmModule.forRoot({
       type: "mysql",
       host: process.env.DB_HOST_NAME,
@@ -28,7 +30,7 @@ import { Cart } from './typeorm/Cart';
       password: process.env.DB_PASSWORD,
       database: 'testdb',
       autoLoadEntities:true,
-      entities: [User, Category, Product, Cart],
+      entities: [User, Category, Product, Order],
       synchronize: true,
     })
   ],

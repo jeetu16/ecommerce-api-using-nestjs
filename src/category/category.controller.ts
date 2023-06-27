@@ -9,13 +9,13 @@ import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
 @ApiTags('category')
 @ApiBearerAuth('token')
 @UseGuards(AuthGuard)
-@UseGuards(RoleBasedGuard)
 @Controller("/category")
 export class CategoryController {
-
+    
     constructor(private categoryService : CategoryService) {}
-
+    
     @Post("/add")
+    @UseGuards(RoleBasedGuard)
     addCategory(@Body() addCategoryDto : AddCategoryDto) {
         return this.categoryService.addCategory(addCategoryDto);
     }

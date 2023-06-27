@@ -21,8 +21,6 @@ export class LoggerMiddleware implements NestMiddleware {
             if(method!=='GET') {
                 this.logger.log(req.body);
             }
-
-            console.log(res);
         });
 
         next();

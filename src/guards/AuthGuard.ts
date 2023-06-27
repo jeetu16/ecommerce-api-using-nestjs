@@ -27,12 +27,11 @@ export class AuthGuard implements CanActivate {
             const email  = decodedJWTPayload['email'];
             const foundUser =  await this.userRepository.findOne({where : {email}})
             req['user'] = { user_id: foundUser.user_id, email: foundUser.email, role: foundUser.role }
-            // console.log(req['user'])
-
+            return true
+            
         } catch (error) {
             throw new HttpException("Unauthorized Access", HttpStatus.UNAUTHORIZED);
         }
 
-        return true
     }
 }

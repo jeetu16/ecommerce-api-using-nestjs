@@ -37,6 +37,20 @@ export class AuthController {
                     type: 'string',
                     example: "johndoe",
                     description: "password of user"
+                },
+                mobile: {
+                    type: 'string',
+                    example: "1234567890",
+                    description: "Mobile number of user"
+                },
+                address: {
+                    type: 'string',
+                    example: 'Green Chowk, Durg, C.G.',
+                    description: 'address of the user'
+                },
+                pincode: {
+                    type: 'string',
+                    example: "490001"
                 }
             }
         }

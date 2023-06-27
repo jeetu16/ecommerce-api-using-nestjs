@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category";
 
 
 @Entity({ name: 'product' })
 export class Product {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     product_id: number
 
     @Column()
@@ -27,5 +27,5 @@ export class Product {
     sold:number
 
     @Column()
-    category_id:number
+    category_id: number; 
 }
