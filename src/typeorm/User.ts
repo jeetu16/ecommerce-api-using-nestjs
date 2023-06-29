@@ -4,7 +4,7 @@ import { Product } from './Product';
 import { Category } from './Category';
 import { Cart } from './Cart';
 
-@Entity({ name: "user" })
+@Entity({ name: "users" })
 export class User {
 
     @PrimaryGeneratedColumn()
@@ -27,7 +27,6 @@ export class User {
 
     @Column({
         default: "CUSTOMER",
-        select:false
     })
     role: string
 
@@ -35,7 +34,6 @@ export class User {
     @Column({
         nullable: false,
         default: "",
-        select:false
     })
     password: string
     
@@ -53,9 +51,9 @@ export class User {
     orders: Order[];
 
     
-    @OneToMany(() => Cart, (cart) => cart.user)
+    @OneToOne(() => Cart, (cart) => cart.user)
     @JoinColumn()
-    cart : Cart[]
+    cart : Cart
 
     @Column({
         length: 6

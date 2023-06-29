@@ -5,16 +5,21 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { User as UserEntity } from "src/typeorm/User";
 import { Repository } from "typeorm";
 import { UpdateUserDto } from "./dto/Update.User.dto";
+import { Request } from "express";
+import { Cart } from "src/typeorm/Cart";
 
 
 @Injectable()
 export class UsersService {
 
-    constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) { }
+    constructor(
+        @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+        @InjectRepository(Cart) private readonly cartRepository: Repository<Cart>
+    ) { }
 
     // Get all the user details
     async getAllUsers() {
-        const users = (await this.userRepository.find()).map(user => plainToClass(SerializedUser, user));
+        const users = (await this.userRepository.find({relations: ['cart']})).map(user => plainToClass(SerializedUser, user));
         return users;
     }
 
@@ -61,5 +66,37 @@ export class UsersService {
             message: "successfully updated user",
             updatedUser: plainToClass(SerializedUser, updatedUser)
         }
+    }
+
+    // get cart details
+    async getCartDetails(req: Request) {
+
+        const id = req['user'].user_id;
+
+        const user = await this.userRepository.findOne({where: { user_id: id }, relations : ['cart'] });
+
+        console.log(user.cart);
+        
+
+        if(!user.cart) {
+            return {
+                cart: []
+            }
+        }
+        const cart = await this.cartRepository.findOne({where: {cart_id: user.cart.cart_id}, relations: ['products']})
+
+
+        let total_cart_amount : number = 0;
+
+        for (let index = 0; index < cart.products.length; index++) {
+            total_cart_amount += cart.products[index].price;
+            console.log(cart.products[index].price)
+        }
+
+        return {
+            cart: cart.products,
+            totalAmount: total_cart_amount
+        };         
+
     }
 }

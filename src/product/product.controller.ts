@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { AddProductDto } from "./dto/Add.Product.dto";
 import { AuthGuard } from "src/guards/AuthGuard";
 import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
@@ -18,6 +18,40 @@ export class ProductController {
     @Post("/add")
     @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for adding the product into database. This api can only be accessed by Admin" })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                product_name: {
+                    type: 'string',
+                    example: "T-shirt",
+                    description: "Name of the product"
+                },
+                product_description: {
+                    type: 'string',
+                    example: "This is full sleeve round neck t-shirt",
+                    description: "Details about product"
+                },
+                price: {
+                    type: 'number',
+                    example: 400,
+                    description: "Price of the product"
+                },
+                stock: {
+                    type: 'number',
+                    example: 10,
+                    description: "total current stock available"
+                },
+                category: {
+                    type: 'number',
+                    example: 3,
+                    description: "Defines the category of the product"
+                }
+
+
+            }
+        }
+    })
     addProduct(@Body() addProductDto : AddProductDto) {
         return this.productService.addProduct(addProductDto);
     }

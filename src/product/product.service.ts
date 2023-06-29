@@ -15,9 +15,9 @@ export class ProductService {
     // adding product into db
     async addProduct( addProductDto: AddProductDto ) : Promise<{}> {
 
-        const {category_id} = addProductDto
+        const {category} = addProductDto
 
-        const findCategory = await this.categoryRepository.findOne({where:{id:category_id}})
+        const findCategory = await this.categoryRepository.findOne({where:{id:category}})
 
         if(!findCategory) {
             throw new NotFoundException("Not found any category");
@@ -29,7 +29,7 @@ export class ProductService {
             throw new HttpException("Product already exists", HttpStatus.CONFLICT)
         }
 
-        const newProduct = this.productRepository.create(addProductDto);
+        const newProduct = this.productRepository.create({ ...addProductDto, category: findCategory });
 
         await this.productRepository.save(newProduct)
 

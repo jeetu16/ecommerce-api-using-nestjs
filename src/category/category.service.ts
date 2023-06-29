@@ -8,9 +8,10 @@ import { AddCategoryDto } from "./dto/Add.Category.dto";
 @Injectable()
 export class CategoryService {
        constructor(@InjectRepository(Category)  private readonly categoryRepository: Repository<Category>) {}
+
+
        async addCategory(addCategoryDto: AddCategoryDto) {
 
-    
             const categoryName = addCategoryDto.category_name; 
 
             const category = await this.categoryRepository.findOne({ where: { category_name: categoryName } })
@@ -45,7 +46,7 @@ export class CategoryService {
        }
 
        async getAllCategory() {
-        const categories = await this.categoryRepository.find()
+        const categories = await this.categoryRepository.find({ relations: ['products'] })
 
         return categories;
        }

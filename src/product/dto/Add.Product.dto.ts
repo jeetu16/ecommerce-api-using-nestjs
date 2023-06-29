@@ -36,11 +36,11 @@ export class AddProductDto {
     stock: number
 
     @ApiProperty({
-        description:"Provide prduct category Id",
+        description:"Provide product category Id",
         example:5
     })
     @IsNotEmpty()
-    category_id:number
+    category:number
     
     
 

@@ -1,11 +1,10 @@
-import { Controller, Get, Param, ParseIntPipe, Body,  Delete, Patch, UseGuards } from "@nestjs/common";
+import { Controller, Get, Param, ParseIntPipe, Body,  Delete, Patch, UseGuards, Req } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { UpdateUserDto } from "./dto/Update.User.dto";
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiSecurity, ApiTags } from "@nestjs/swagger";
 import { AuthGuard } from "src/guards/AuthGuard";
 import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
-import { Product } from "src/typeorm/Product";
-
+import { Request } from "express";
 
 
 @ApiTags('users')
@@ -122,5 +121,11 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number
     ) {
         return this.usersService.updateUser(id, updateUserDto);
+    }
+
+    @Get('/cart_details')
+    @ApiOperation({summary:"This api shows cart details of specific logged in user"})
+    getCartDetails(@Req() req: Request){
+        return this.usersService.getCartDetails(req);
     }
 }

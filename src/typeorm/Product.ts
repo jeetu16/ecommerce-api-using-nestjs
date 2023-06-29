@@ -1,8 +1,9 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category";
+import { Cart } from "./Cart";
 
 
-@Entity({ name: 'product' })
+@Entity({ name: 'products' })
 export class Product {
     @PrimaryGeneratedColumn()
     product_id: number
@@ -26,8 +27,10 @@ export class Product {
     })
     sold:number
 
-    @ManyToOne(type => Category, )
+    @ManyToOne(type => Category )
+    @JoinColumn()
+    category: Category; 
 
-    @Column()
-    category_id: number; 
+    @ManyToOne(() => Cart, (cart) => cart.products)
+    cart: Cart; 
 }

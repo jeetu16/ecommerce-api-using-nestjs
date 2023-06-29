@@ -20,22 +20,22 @@ export class AuthController {
             properties: {
                 firstName: {
                     type: 'string',
-                    example: "John",
+                    example: "Rahul",
                     description: "First name of user"
                 },
                 lastName: {
                     type: 'string',
-                    example: "Doe",
+                    example: "Yadav",
                     description: "Last name of user"
                 },
                 email: {
                     type: 'string',
-                    example: "johndoe@gmail.com",
+                    example: "rahul@gmail.com",
                     description: "email address of user"
                 },
                 password: {
                     type: 'string',
-                    example: "johndoe",
+                    example: "rahul",
                     description: "password of user"
                 },
                 mobile: {
@@ -81,12 +81,12 @@ export class AuthController {
             properties: {
                 email: {
                     type: 'string',
-                    example: 'johndoe@gmail.com',
+                    example: 'hemant@gmail.com',
                     description: "email address of user"
                 },
                 password: {
                     type: 'string',
-                    example: "johndoe",
+                    example: "hemant",
                     description: "password of user"
                 }
             }

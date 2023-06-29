@@ -43,9 +43,12 @@ export class AuthService {
     async loginUser(loginUserDto: LoginUserDto, req: Request) {
         const { email, password } = loginUserDto;
         const user = await this.userRepository.findOne({ where: { email } });
+        
         if (!user) {
             throw new HttpException("Not found any user", HttpStatus.NOT_FOUND);
         } 
+        console.log(user.password);
+        
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
             const payload = { email: user.email, user_id: user.user_id, role: user.role }

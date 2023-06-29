@@ -1,5 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
+import { Product } from "./Product";
 
 
 @Entity({name:"cart"})
@@ -7,12 +8,10 @@ export class Cart{
     @PrimaryGeneratedColumn()
     cart_id: number
 
-    @ManyToOne(() => User, (user) => user.cart )
+    @OneToOne(() => User, (user) => user.cart )
     user : User
 
-    @Column({
-        type:'simple-json'
-    })
-    product: JSON
-
+    @OneToMany(() => Product, (product) => product.cart)
+    @JoinColumn()
+    products: Product[]
 }

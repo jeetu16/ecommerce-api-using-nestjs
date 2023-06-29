@@ -13,14 +13,8 @@ import { OrderService } from "src/order/order.service";
 export class OrderContorller {
     constructor(private orderService : OrderService) {}
 
-    @Post('add_to_cart/:product_id')
-    @ApiOperation({ summary: "This api is used for adding the product into user cart." })
-    addToCart(@Param('product_id', ParseIntPipe) product_id: number, @Req() req: Request) {
-        return this.orderService.addToCart(product_id, req);
+    @Post('place_order/:1')
+    placeOrder(@Param('product_id', ParseIntPipe) product_id: number, @Req() req: Request) {
+        return this.orderService.placeOrder(product_id, req);
     }
-
-    // @Post('place_order/:1')
-    // placeOrder(@Param('product_id', ParseIntPipe) product_id: number, @Req() req: Request) {
-    //     return this.orderService.placeOrder(product_id, req);
-    // }
 }

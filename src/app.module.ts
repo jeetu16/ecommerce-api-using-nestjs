@@ -13,6 +13,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { Order } from './typeorm/Order';
 import { OrderModule } from './order/order.module';
 import { Cart } from './typeorm/Cart';
+import { CartModule } from './cart/cart.module';
 
 
 @Module({
@@ -23,6 +24,7 @@ import { Cart } from './typeorm/Cart';
     CategoryModule,
     ProductModule,
     OrderModule,
+    CartModule,
     TypeOrmModule.forRoot({
       type: "mysql",
       host: process.env.DB_HOST_NAME,
