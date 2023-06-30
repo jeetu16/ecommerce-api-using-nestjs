@@ -22,17 +22,20 @@ export class AddProductDto {
 
     @ApiProperty({
         description:"Provide price of the product",
-        example:"500"
+        type: "number",
+        example:500
     })
-    @IsNumber()
+    // @IsNumber()
     @IsNotEmpty()
     price:number
 
     @ApiProperty({
         description:"Provide provide total stock available",
-        example:"10"
+        type: "number",
+        example:10
     })
-    @IsNumber()
+    // @IsNumber()
+    @IsNotEmpty()
     stock: number
 
     @ApiProperty({
@@ -41,7 +44,6 @@ export class AddProductDto {
     })
     @IsNotEmpty()
     category:number
-    
-    
 
+    
 }

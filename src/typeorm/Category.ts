@@ -18,4 +18,7 @@ export class Category {
     @OneToMany(type=>Product, product=>product.category)
     @JoinColumn()
     products: Product[];
+
+    @Column("simple-array")
+    photos: string[];
 }

@@ -14,10 +14,14 @@ import { Order } from './typeorm/Order';
 import { OrderModule } from './order/order.module';
 import { Cart } from './typeorm/Cart';
 import { CartModule } from './cart/cart.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 
 @Module({
   imports: [
+    MulterModule.register({
+      dest: '../upload',
+    }),
     ConfigModule.forRoot(),
     UsersModule,
     AuthModule,

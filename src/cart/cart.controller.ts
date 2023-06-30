@@ -15,7 +15,7 @@ export class CartController {
 
 
     @Get()
-    @ApiOperation({ summary: "This api is used for getting all users cart information" })
+    @ApiOperation({ summary: "This api is used for getting all users cart information. It can only be accessed by admin" })
     @UseGuards(RoleBasedGuard)
     getAllUsersCart() {
         return this.cartService.getAllUsersCart();

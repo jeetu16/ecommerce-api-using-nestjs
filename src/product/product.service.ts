@@ -4,7 +4,8 @@ import { Repository } from "typeorm";
 import { AddProductDto } from "./dto/Add.Product.dto";
 import { HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
 import { Category } from "src/typeorm/Category";
-
+import { createReadStream, createWriteStream } from "fs";
+import * as path from 'path';
 
 export class ProductService {
     constructor(
@@ -13,7 +14,7 @@ export class ProductService {
     ) {}
 
     // adding product into db
-    async addProduct( addProductDto: AddProductDto ) : Promise<{}> {
+    async addProduct( addProductDto: AddProductDto, product_photos: Array<Express.Multer.File> ) : Promise<{}> {
 
         const {category} = addProductDto
 
@@ -29,9 +30,31 @@ export class ProductService {
             throw new HttpException("Product already exists", HttpStatus.CONFLICT)
         }
 
-        const newProduct = this.productRepository.create({ ...addProductDto, category: findCategory });
+        // saving photos in server
 
-        await this.productRepository.save(newProduct)
+        const destination = '../../uploads/';
+
+        const filePaths: string[] = [];
+
+        for (const file of product_photos) {
+            
+            const fileName = file.originalname;
+
+            if (file.buffer) {
+                const writeStream = createWriteStream(destination + fileName);
+                writeStream.write(file.buffer);
+                writeStream.end();
+
+                const filePath = path.join('C:/uploads',destination,fileName);
+                filePaths.push(filePath);
+            }
+        }
+
+        console.log(filePaths);
+
+        const newProduct = this.productRepository.create({ ...addProductDto, category: findCategory, photos: filePaths });
+
+        // await this.productRepository.save(newProduct)
 
         return {
             message: "Successfully added product",
@@ -42,7 +65,7 @@ export class ProductService {
 
     // get all products from db
     async getAllProducts() : Promise<Product[]>{
-        const products = await this.productRepository.find();
+        const products = await this.productRepository.find({ relations: ['category']});
 
         return products
     }

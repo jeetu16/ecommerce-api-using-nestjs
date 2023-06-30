@@ -33,4 +33,7 @@ export class Product {
 
     @ManyToOne(() => Cart, (cart) => cart.products)
     cart: Cart; 
+
+    @Column("simple-array")
+    photos: string[];
 }

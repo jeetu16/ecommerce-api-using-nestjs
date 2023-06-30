@@ -3,6 +3,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Category } from "src/typeorm/Category";
 import { Repository } from "typeorm";
 import { AddCategoryDto } from "./dto/Add.Category.dto";
+import { createWriteStream } from "fs";
+import path from "path";
 
 
 @Injectable()
@@ -10,7 +12,7 @@ export class CategoryService {
        constructor(@InjectRepository(Category)  private readonly categoryRepository: Repository<Category>) {}
 
 
-       async addCategory(addCategoryDto: AddCategoryDto) {
+       async addCategory(addCategoryDto: AddCategoryDto, category_photo: Array<Express.Multer.File>) {
 
             const categoryName = addCategoryDto.category_name; 
 
@@ -20,7 +22,28 @@ export class CategoryService {
                 throw new HttpException("Category already exist", HttpStatus.CONFLICT);
             }
 
-            const newCategory = this.categoryRepository.create({...addCategoryDto})
+            // saving photo in sever
+
+            const destination = '../../uploads/';
+
+            const filePaths: string[] = [];
+
+            for (const file of category_photo) {
+            
+            const fileName = file.originalname;
+
+            if (file.buffer) {
+                const writeStream = createWriteStream(destination + fileName);
+                writeStream.write(file.buffer);
+                writeStream.end();
+
+                const filePath = path.join('C:/uploads',destination,fileName);
+                filePaths.push(filePath);
+            }
+        }
+            
+
+            const newCategory = this.categoryRepository.create({...addCategoryDto, photos: filePaths})
             
             await this.categoryRepository.save(newCategory);
 

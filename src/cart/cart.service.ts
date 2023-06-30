@@ -26,29 +26,22 @@ export class CartService {
             
             const id = req['user'].user_id;
 
+            console.log(req['user']);
+
             let updatedCart;
 
-            const cart = await this.cartRepository.findOne({ where: { "user": id }, relations: ['products', 'user'] }) ;
-
-            console.log(cart);
+            const user = await this.userRepository.findOne({ where: { "user_id": id }, relations: ['cart'] });
             
-            
-            if(!cart) {
-                
+            if(!user.cart) {
                 let newCart = new Cart();
-                const user = await this.userRepository.findOne({ where: { "user_id": id } }) ;
-                console.log(user);
-                newCart.user= user ;
-                newCart.products = [product] ;
-                return await this.cartRepository.save(newCart) ;
-            }
-            else {  
-                //let modifiedCart =  await this.cartRepository.findOne({ where: { "user": id } });
-                console.log(cart);
-                cart.products.push(product) ;
+                newCart.user= user;
+                newCart.products.push(product);
+
+                return await this.cartRepository.save(newCart);
+            } else {
+                const cart = await this.cartRepository.findOne({ where: { "cart_id": user.cart.cart_id }, relations: ['products', 'user'] });
+                cart.products.push(product);
                 updatedCart = await this.cartRepository.save(cart);
-                // updatedCart = await this.cartRepository.update({cart_id: cart.cart_id}, cart);
-                console.log(updatedCart);
             }
 
             return updatedCart
@@ -84,7 +77,7 @@ export class CartService {
         } 
 
         if(deleted_id > -1 && deleted_id < findCart.products.length)
-            findCart.products.splice(deleted_id,1) ;  // removes the last element since index is -1     
+            findCart.products.splice(deleted_id,1) ;    
         else 
             throw new NotFoundException('Product does not exist in cart') ;
 

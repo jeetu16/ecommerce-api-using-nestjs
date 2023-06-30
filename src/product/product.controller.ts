@@ -1,9 +1,11 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ProductService } from "./product.service";
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiTags } from "@nestjs/swagger";
 import { AddProductDto } from "./dto/Add.Product.dto";
 import { AuthGuard } from "src/guards/AuthGuard";
 import { RoleBasedGuard } from "src/guards/RoleBasedGuard";
+import { FilesInterceptor } from "@nestjs/platform-express";
+import { ParseFile } from "./parse.file.pipe";
 
 
 
@@ -16,7 +18,10 @@ export class ProductController {
     constructor(private productService: ProductService) {}
     
     @Post("/add")
+    @UseInterceptors(FilesInterceptor('photos'))
     @UseGuards(RoleBasedGuard)
+    @ApiConsumes('multipart/form-data')
+    // @ApiImplicitFile({ name: 'file', required: true })
     @ApiOperation({ summary: "This api is used for adding the product into database. This api can only be accessed by Admin" })
     @ApiBody({
         schema: {
@@ -46,14 +51,22 @@ export class ProductController {
                     type: 'number',
                     example: 3,
                     description: "Defines the category of the product"
-                }
-
-
+                },
+                photos: {
+                    type: 'array', 
+                    items: {
+                        type: 'string',
+                        format: 'binary',
+                    },
+                },
             }
         }
     })
-    addProduct(@Body() addProductDto : AddProductDto) {
-        return this.productService.addProduct(addProductDto);
+    addProduct(
+        @Body() addProductDto : AddProductDto, 
+        @UploadedFiles(ParseFile) product_photos: Array<Express.Multer.File>
+    ) {
+            return this.productService.addProduct(addProductDto, product_photos);
     }
 
     @Get()
@@ -83,7 +96,4 @@ export class ProductController {
     updateProduct(@Param('product_id', ParseIntPipe) product_id: number) {
         return this.productService.updateProduct(product_id);
     }
-
-    
-
 }
