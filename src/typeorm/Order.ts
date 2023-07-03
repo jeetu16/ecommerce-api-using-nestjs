@@ -1,7 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./User";
 import { Product } from "./Product";
 
+
+export type order_status = "Ordered" | "Dispatched" | "Delivered" | "Rejected" | "Cancelled" 
 
 @Entity({name: "orders"})
 export class Order {
@@ -15,13 +17,20 @@ export class Order {
     @JoinColumn()
     user: User;
 
-    @Column()
-    order_status: string
-
+    @Column({
+        type: "enum",
+        enum: ["Ordered", "Dispatched", "Delivered", "Rejected", "Cancelled"],
+        default: ["Ordered"]
+    })
+    order_status: order_status[]
     @Column()
     total_amount: number
 
-    // @OneToMany(() => Product)
-    // @JoinColumn()
-    // products : Product
+    @OneToMany(() => Product, (product) => product.order)
+    @JoinColumn()
+    products : Product[]
+
+    @Column()
+    address: string
+
 }

@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./Category";
 import { Cart } from "./Cart";
+import { Order } from "./Order";
 
 
 @Entity({ name: 'products' })
@@ -10,6 +11,9 @@ export class Product {
 
     @Column()
     product_name: string
+
+    @Column()
+    brand_name: string
 
     @Column()
     product_description: string
@@ -27,13 +31,18 @@ export class Product {
     })
     sold:number
 
-    @ManyToOne(type => Category )
+
+    @ManyToOne(type => Category)
     @JoinColumn()
-    category: Category; 
+    category: Category;
 
     @ManyToOne(() => Cart, (cart) => cart.products)
+    @JoinColumn()
     cart: Cart; 
 
     @Column("simple-array")
     photos: string[];
+
+    @ManyToOne(() => Order, (order) => order.products)
+    order: Order
 }

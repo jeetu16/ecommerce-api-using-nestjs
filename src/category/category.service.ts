@@ -4,7 +4,7 @@ import { Category } from "src/typeorm/Category";
 import { Repository } from "typeorm";
 import { AddCategoryDto } from "./dto/Add.Category.dto";
 import { createWriteStream } from "fs";
-import path from "path";
+import * as path from 'path';
 
 
 @Injectable()

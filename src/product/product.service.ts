@@ -6,6 +6,8 @@ import { HttpException, HttpStatus, NotFoundException } from "@nestjs/common";
 import { Category } from "src/typeorm/Category";
 import { createReadStream, createWriteStream } from "fs";
 import * as path from 'path';
+import { plainToClass } from "class-transformer";
+import { SerializedProductForUser } from "./model/SerializedProductForUser";
 
 export class ProductService {
     constructor(
@@ -14,7 +16,7 @@ export class ProductService {
     ) {}
 
     // adding product into db
-    async addProduct( addProductDto: AddProductDto, product_photos: Array<Express.Multer.File> ) : Promise<{}> {
+    async addProduct( addProductDto: AddProductDto, product_photos: Array<Express.Multer.File> )  {
 
         const {category} = addProductDto
 
@@ -23,6 +25,8 @@ export class ProductService {
         if(!findCategory) {
             throw new NotFoundException("Not found any category");
         }
+
+        const { price, stock } = addProductDto;
 
         const existsProduct = await this.productRepository.findOne({ where: { product_name: addProductDto.product_name } })
 
@@ -54,7 +58,7 @@ export class ProductService {
 
         const newProduct = this.productRepository.create({ ...addProductDto, category: findCategory, photos: filePaths });
 
-        // await this.productRepository.save(newProduct)
+        await this.productRepository.save(newProduct)
 
         return {
             message: "Successfully added product",
@@ -64,14 +68,59 @@ export class ProductService {
 
 
     // get all products from db
-    async getAllProducts() : Promise<Product[]>{
-        const products = await this.productRepository.find({ relations: ['category']});
+    async getAllProducts() {
+        
+        // const products = await this.productRepository.find({ relations: ['category']});
+        const products = (await this.productRepository.find()).map(product => plainToClass(SerializedProductForUser, product));
 
         return products
     }
 
+    async getAllProductsByName(product_name: string) {
+
+        const products = await this.productRepository.find();
+
+        const filteredProducts = products.filter(product => product.product_name.toLowerCase().includes(product_name.toLowerCase()))
+
+        if(filteredProducts.length===0) {
+            throw new HttpException("Not found any product", HttpStatus.NOT_FOUND)
+        }
+
+        return {
+            products : filteredProducts
+        }
+    }
+
+    // get all products details. This can be accessed by user admin only.
+    async getAllProductsDetails() {
+
+        const products = await this.productRepository.find()
+
+        if(!products) {
+            throw new HttpException("Not found any product", HttpStatus.NOT_FOUND);
+        }
+
+        return products
+
+    }
+
+
+    //
+    async getProductsByCategory(category_id:number) {
+
+        const products = (await this.productRepository.find({ relations: ['category']})).map(product => plainToClass(SerializedProductForUser, product))
+
+        const categorizedProducts = (products.filter(products => products.category.id === category_id)).map(product => {
+            delete product.category
+            return product
+        })
+
+        return categorizedProducts;
+    }
+
     // delete specific product by id
     async deleteProduct( product_id: number ) {
+
         if(!product_id) {
             throw new HttpException("Please provide product id", HttpStatus.BAD_REQUEST)
         }
@@ -92,6 +141,7 @@ export class ProductService {
 
     // get a specific product by id
     async getProduct( product_id: number ) {
+
         if(!product_id) {
             throw new HttpException("No token received", HttpStatus.BAD_REQUEST);
         }
@@ -107,9 +157,7 @@ export class ProductService {
 
     // updating product details
 
-    async updateProduct( product_id: number ) {
+    // async updateProduct( product_id: number ) {
         
-    }
-
-
+    // }
 }

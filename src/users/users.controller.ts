@@ -47,13 +47,6 @@ export class UsersController {
     @Get("/search/:id")
     @UseGuards(RoleBasedGuard)
     @ApiOperation({ summary: "This api is used for getting a particular user details" })
-    // @ApiParam({
-    //     name:'id',
-    //     type:'integer',
-    //     required:true,
-    //     description: "Enter user Id" 
-
-    // })
     @ApiResponse({
         status: 201,
         description: "Successfully getting a user details"

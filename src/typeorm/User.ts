@@ -48,6 +48,7 @@ export class User {
 
     
     @OneToMany(() => Order, order => order.user) 
+    @JoinColumn()
     orders: Order[];
 
     

@@ -26,8 +26,6 @@ export class CartService {
             
             const id = req['user'].user_id;
 
-            console.log(req['user']);
-
             let updatedCart;
 
             const user = await this.userRepository.findOne({ where: { "user_id": id }, relations: ['cart'] });
@@ -47,7 +45,6 @@ export class CartService {
             return updatedCart
 
         } catch (error) {
-            console.log(error);
             throw new HttpException(error.message,HttpStatus.BAD_REQUEST);
         }
 
@@ -86,9 +83,10 @@ export class CartService {
     }
 
     async getAllUsersCart() {
-        const carts = await this.cartRepository.find({relations: ['user', 'products' ]})
 
+        const carts = await this.cartRepository.find({relations: ['user', 'products' ]})
         return carts
+        
     }
 
 }
